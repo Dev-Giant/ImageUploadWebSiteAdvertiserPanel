@@ -2,6 +2,9 @@ import SidebarAdvertiser from "../components/SidebarAdvertiser";
 import TopbarAdvertiser from "../components/TopbarAdvertiser";
 
 export default function AdvertiserLayout({ children, user, onLogout }) {
+  console.log('AdvertiserLayout rendered with user:', user);
+  console.log('Children:', children);
+  
   return (
     <div className="flex min-h-screen">
       <SidebarAdvertiser />

@@ -16,27 +16,34 @@ export default function AccountPage() {
     async function fetchAccount() {
       try {
         const data = await accountAPI.getAccount();
-        setAccount(data || { email: "" });
+        if (data) {
+          setAccount({
+            company: data.company || "",
+            contact: data.email || "",
+            billingEmail: data.email || "",
+            apiKey: "demo-123456", // This would come from backend
+            notifyEmail: true,
+            notifySMS: false,
+            twoFA: false,
+          });
+        }
       } catch (err) {
         console.error("Failed to load account:", err);
       }
     }
     fetchAccount();
-    // Legacy code - remove if not needed
-    getData("advertiser_account").then(d => {
-      if (d && Object.keys(d).length) setAccount(a => ({ ...a, ...d }));
-    });
   }, []);
 
   async function save() {
     try {
-      await accountAPI.updateAccount({ email: account.email });
-      alert("Account updated successfully");
+      await accountAPI.updateAccount({
+        email: account.contact,
+        company: account.company,
+      });
+      alert("Account settings saved!");
     } catch (err) {
       alert("Failed to update account: " + err.message);
     }
-    recordAudit("update_advertiser_account", JSON.stringify(account));
-    alert("Account settings saved!");
   }
 
   function resetPassword() {

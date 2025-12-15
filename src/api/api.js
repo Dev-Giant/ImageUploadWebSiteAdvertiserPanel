@@ -1,6 +1,9 @@
 // API configuration and service for advertiser panel
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
 
+console.log('API Base URL:', API_BASE_URL);
+console.log('Environment variables:', import.meta.env);
+
 const getToken = () => localStorage.getItem('token');
 
 const apiRequest = async (endpoint, options = {}) => {
@@ -14,17 +17,26 @@ const apiRequest = async (endpoint, options = {}) => {
     headers['Authorization'] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const url = `${API_BASE_URL}${endpoint}`;
+  console.log('Making API request to:', url);
+  console.log('Headers:', headers);
+
+  const response = await fetch(url, {
     ...options,
     headers,
   });
 
+  console.log('Response status:', response.status);
+
   if (!response.ok) {
     const error = await response.json().catch(() => ({ error: 'Request failed' }));
+    console.error('API Error:', error);
     throw new Error(error.error || `HTTP error! status: ${response.status}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  console.log('Response data:', data);
+  return data;
 };
 
 // Auth API

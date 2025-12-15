@@ -15,9 +15,18 @@ export default function GeoTargetingPage() {
             const data = await billboardsAPI.getBillboards();
             // Extract unique postal codes and regions from billboards
             const postalCodes = [...new Set(data.map(b => b.postal_code).filter(Boolean))];
-            setZones(postalCodes.map(pc => ({ name: pc, zips: [pc] })));
+            setZones(postalCodes.map(pc => ({ 
+              id: `z_${pc}`,
+              name: pc, 
+              zips: [pc],
+              estimatedReach: Math.floor(20000 + Math.random() * 50000)
+            })));
             if (data.length > 0) {
-              setPreviewRegion({ name: data[0].postal_code, zips: [data[0].postal_code] });
+              setPreviewRegion({ 
+                name: data[0].postal_code, 
+                zips: [data[0].postal_code],
+                estimatedReach: Math.floor(20000 + Math.random() * 50000)
+              });
             }
           } catch (err) {
             console.error("Failed to load billboards:", err);
@@ -37,8 +46,7 @@ export default function GeoTargetingPage() {
         };
         const next = [z, ...zones];
         setZones(next);
-        saveData("geo_zones", next);
-        recordAudit("add_geo_zone", JSON.stringify(z));
+        // TODO: Save to backend API
         setZip("");
         setSelectedRegion("");
     }
@@ -48,9 +56,8 @@ export default function GeoTargetingPage() {
         if (exclude.includes(zip)) return alert("ZIP already excluded");
         const next = [...exclude, zip];
         setExclude(next);
-        // Exclusions not yet in API
+        // TODO: Save exclusions to backend API
         alert("Exclusions feature not yet implemented in backend");
-        recordAudit("exclude_zip", zip);
         setZip("");
     }
 
@@ -58,8 +65,7 @@ export default function GeoTargetingPage() {
         if (!confirm("Remove this target zone?")) return;
         const next = zones.filter(z => z.id !== id);
         setZones(next);
-        saveData("geo_zones", next);
-        recordAudit("remove_geo_zone", id);
+        // TODO: Remove from backend API
     }
 
     function previewZone(zone) {
@@ -129,7 +135,7 @@ export default function GeoTargetingPage() {
                                     ZIPs: {(z.zips || []).join(", ") || "N/A"}
                                 </div>
                                 <div className="text-xs mt-1">
-                                    Estimated Reach: {z.estimatedReach.toLocaleString()}
+                                    Estimated Reach: {(z.estimatedReach || 0).toLocaleString()}
                                 </div>
 
                                 <div className="flex gap-2 mt-3">

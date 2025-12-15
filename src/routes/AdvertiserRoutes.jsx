@@ -12,13 +12,13 @@ export default function AdvertiserRoutes({ user, onLogout }) {
     return (
         <AdvertiserLayout user={user} onLogout={onLogout}>
             <Routes>
-                <Route path="/advertiser" element={<AdvertiserDashboardHome />} />
-                <Route path="/advertiser/campaigns" element={<CampaignsPage />} />
-                <Route path="/advertiser/media" element={<MediaUploadPage />} />
-                <Route path="/advertiser/geo" element={<GeoTargetingPage />} />
-                <Route path="/advertiser/analytics" element={<AnalyticsPage />} />
-                <Route path="/advertiser/account" element={<AccountPage />} />
-                <Route path="/advertiser/billing" element={<BillingPage />} />
+                <Route index element={<AdvertiserDashboardHome />} />
+                <Route path="campaigns" element={<CampaignsPage />} />
+                <Route path="media" element={<MediaUploadPage />} />
+                <Route path="geo" element={<GeoTargetingPage />} />
+                <Route path="analytics" element={<AnalyticsPage />} />
+                <Route path="account" element={<AccountPage />} />
+                <Route path="billing" element={<BillingPage />} />
             </Routes>
         </AdvertiserLayout>
     );

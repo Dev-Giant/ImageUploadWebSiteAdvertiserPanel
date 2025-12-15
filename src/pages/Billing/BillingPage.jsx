@@ -18,23 +18,12 @@ export default function BillingPage() {
       }
     }
     fetchInvoices();
-    // Payment methods not in API yet
-    getData("paymentMethods").then(d =>
-      setInvoices(
-        d || [
-          { id: "inv_1", date: new Date().toISOString(), amount: 1200, status: "Paid", fileUrl: "" },
-          { id: "inv_2", date: new Date().toISOString(), amount: 450, status: "Pending", fileUrl: "" },
-        ]
-      )
-    );
-    getData("paymentMethods").then(d =>
-      setPaymentMethods(
-        d || [
-          { id: "pm_1", type: "Credit Card", details: "**** **** **** 4242" },
-          { id: "pm_2", type: "PayPal", details: "user@example.com" },
-        ]
-      )
-    );
+    
+    // Set default payment methods (these would come from API in production)
+    setPaymentMethods([
+      { id: "pm_1", type: "Credit Card", details: "**** **** **** 4242" },
+      { id: "pm_2", type: "PayPal", details: "user@example.com" },
+    ]);
   }, []);
 
   function downloadInvoice(inv) {
@@ -83,7 +72,7 @@ export default function BillingPage() {
             {invoices.map(inv => (
               <tr key={inv.id} className="text-xs bg-blue-950 rounded-lg shadow-lg">
                 <td className="p-3">{inv.id}</td>
-                <td className="p-3">{new Date(inv.date).toLocaleDateString()}</td>
+                <td className="p-3">{new Date(inv.created_at || inv.date).toLocaleDateString()}</td>
                 <td className="p-3">${inv.amount}</td>
                 <td className="p-3">
                   {inv.status}

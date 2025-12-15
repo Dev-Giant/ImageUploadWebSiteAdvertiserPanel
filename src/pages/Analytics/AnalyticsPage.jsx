@@ -6,6 +6,7 @@ import {
 
 export default function AnalyticsPage() {
     const [campaigns, setCampaigns] = useState([]);
+    const [analytics, setAnalytics] = useState({ total_uploads: 0, unique_users: 0 });
     const [selectedRange, setSelectedRange] = useState("30d");
 
     useEffect(() => {

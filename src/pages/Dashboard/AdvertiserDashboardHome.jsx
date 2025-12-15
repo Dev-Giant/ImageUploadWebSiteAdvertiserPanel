@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getData } from "../../api/mockApi";
+import { campaignsAPI, analyticsAPI } from "../../api/api";
 import CampaignCard from "../../components/CampaignCard";
 import { Line } from "react-chartjs-2";
 import "chart.js/auto";
@@ -8,8 +8,12 @@ import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 
 export default function AdvertiserDashboardHome() {
+    console.log('AdvertiserDashboardHome component rendered');
+    
     const [campaigns, setCampaigns] = useState([]);
     const [filteredCampaigns, setFilteredCampaigns] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [summary, setSummary] = useState({
         impressions: 0,
         clicks: 0,
@@ -27,10 +31,23 @@ export default function AdvertiserDashboardHome() {
 
     useEffect(() => {
         async function load() {
-            const allCampaigns = await getData("campaigns");
-            setCampaigns(allCampaigns || []);
-            setFilteredCampaigns(allCampaigns || []);
-            calculateSummary(allCampaigns);
+            try {
+                setLoading(true);
+                setError(null);
+                console.log('Loading campaigns...');
+                const allCampaigns = await campaignsAPI.getCampaigns();
+                console.log('Campaigns loaded:', allCampaigns);
+                setCampaigns(allCampaigns || []);
+                setFilteredCampaigns(allCampaigns || []);
+                calculateSummary(allCampaigns);
+            } catch (error) {
+                console.error('Failed to load campaigns:', error);
+                setError(error.message);
+                setCampaigns([]);
+                setFilteredCampaigns([]);
+            } finally {
+                setLoading(false);
+            }
         }
         load();
     }, []);
@@ -56,7 +73,7 @@ export default function AdvertiserDashboardHome() {
         const { startDate, endDate } = ranges.selection;
         setFilter((prev) => ({ ...prev, startDate, endDate }));
         const filtered = campaigns.filter((c) => {
-            const date = new Date(c.createdAt);
+            const date = new Date(c.created_at || c.createdAt);
             return date >= startDate && date <= endDate;
         });
         setFilteredCampaigns(filtered);
@@ -68,7 +85,7 @@ export default function AdvertiserDashboardHome() {
         .slice(0, 5);
 
     const recentUploads = [...filteredCampaigns]
-        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .sort((a, b) => new Date(b.created_at || b.createdAt) - new Date(a.created_at || a.createdAt))
         .slice(0, 5);
 
     // Tiny sparkline data
@@ -93,6 +110,33 @@ export default function AdvertiserDashboardHome() {
             y: { display: false },
         },
     };
+
+    if (loading) {
+        return (
+            <div className="space-y-6 text-neutral-50">
+                <div className="text-center py-8">
+                    <div className="text-lg">Loading dashboard...</div>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="space-y-6 text-neutral-50">
+                <div className="text-center py-8">
+                    <div className="text-lg text-red-400">Error loading dashboard</div>
+                    <div className="text-sm text-gray-400 mt-2">{error}</div>
+                    <button 
+                        onClick={() => window.location.reload()} 
+                        className="mt-4 px-4 py-2 bg-sky-400 rounded-lg text-sm"
+                    >
+                        Retry
+                    </button>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="space-y-6 text-neutral-50">
@@ -195,7 +239,7 @@ export default function AdvertiserDashboardHome() {
                                 <tr key={c.id} className="text-xs bg-blue-950 rounded-lg shadow-lg">
                                     <td className="px-4 py-2">{c.id}</td>
                                     <td className="px-4 py-2">
-                                        {new Date(c.createdAt).toLocaleDateString()}
+                                        {new Date(c.created_at || c.createdAt).toLocaleDateString()}
                                     </td>
                                     <td className="px-4 py-2">
                                         <span>

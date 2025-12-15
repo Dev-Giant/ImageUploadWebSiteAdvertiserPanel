@@ -7,7 +7,10 @@ import { useAuth } from "./hooks/useAuth";
 export default function App() {
   const { user, login, logout } = useAuth();
 
+  console.log('App component - Current user:', user);
+
   const handleAuthSuccess = (response) => {
+    console.log('Auth success response:', response);
     if (response?.token) {
       login(response.token, response.user);
     }
@@ -15,6 +18,8 @@ export default function App() {
 
   const isAdvertiser =
     user?.role === "advertiser" || user?.role === "ancillary_advertiser";
+  
+  console.log('Is advertiser:', isAdvertiser);
 
   return (
     <BrowserRouter>
