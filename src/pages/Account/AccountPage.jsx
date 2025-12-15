@@ -28,7 +28,7 @@ export default function AccountPage() {
     });
   }, []);
 
-  function save() {
+  async function save() {
     try {
       await accountAPI.updateAccount({ email: account.email });
       alert("Account updated successfully");

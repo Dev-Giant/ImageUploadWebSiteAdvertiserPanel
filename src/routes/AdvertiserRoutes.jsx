@@ -8,9 +8,9 @@ import AnalyticsPage from "../pages/Analytics/AnalyticsPage";
 import AccountPage from "../pages/Account/AccountPage";
 import BillingPage from "../pages/Billing/BillingPage";
 
-export default function AdvertiserRoutes() {
+export default function AdvertiserRoutes({ user, onLogout }) {
     return (
-        <AdvertiserLayout>
+        <AdvertiserLayout user={user} onLogout={onLogout}>
             <Routes>
                 <Route path="/advertiser" element={<AdvertiserDashboardHome />} />
                 <Route path="/advertiser/campaigns" element={<CampaignsPage />} />

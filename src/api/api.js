@@ -29,14 +29,22 @@ const apiRequest = async (endpoint, options = {}) => {
 
 // Auth API
 export const authAPI = {
-  login: async (email, password) => {
+  login: async (email, password, role) => {
     const response = await apiRequest('/auth/login', {
       method: 'POST',
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, role }),
     });
     if (response.token) {
       localStorage.setItem('token', response.token);
     }
+    return response;
+  },
+
+  register: async (userData) => {
+    const response = await apiRequest('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(userData),
+    });
     return response;
   },
 
