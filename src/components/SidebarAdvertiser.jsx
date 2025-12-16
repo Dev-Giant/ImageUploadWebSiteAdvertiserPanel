@@ -7,6 +7,7 @@ export default function SidebarAdvertiser() {
         { to: "/advertiser/media", label: "Media Uploads", icon: "📁" },
         { to: "/advertiser/geo", label: "Geo Targeting", icon: "🗺️" },
         { to: "/advertiser/analytics", label: "Analytics", icon: "📈" },
+        { to: "/advertiser/ad-placements", label: "Ad Placements", icon: "📺" },
         { to: "/advertiser/billing", label: "Billing", icon: "💳" },
         { to: "/advertiser/account", label: "Account", icon: "👤" },
     ];

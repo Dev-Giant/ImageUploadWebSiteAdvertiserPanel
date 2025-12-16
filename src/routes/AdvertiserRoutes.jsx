@@ -7,6 +7,7 @@ import GeoTargetingPage from "../pages/Geo/GeoTargetingPage";
 import AnalyticsPage from "../pages/Analytics/AnalyticsPage";
 import AccountPage from "../pages/Account/AccountPage";
 import BillingPage from "../pages/Billing/BillingPage";
+import AdPlacementsPage from "../pages/AdPlacements/AdPlacementsPage";
 
 export default function AdvertiserRoutes({ user, onLogout }) {
     return (
@@ -17,6 +18,7 @@ export default function AdvertiserRoutes({ user, onLogout }) {
                 <Route path="media" element={<MediaUploadPage />} />
                 <Route path="geo" element={<GeoTargetingPage />} />
                 <Route path="analytics" element={<AnalyticsPage />} />
+                <Route path="ad-placements" element={<AdPlacementsPage />} />
                 <Route path="account" element={<AccountPage />} />
                 <Route path="billing" element={<BillingPage />} />
             </Routes>
